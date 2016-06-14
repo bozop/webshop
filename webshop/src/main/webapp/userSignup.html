@@ -1,0 +1,93 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> 
+<style>	
+p {
+	color: red;
+    font-family: "Times New Roman";
+    font-size: 15px;
+}
+h2 {
+	color: green;
+}
+button {
+    background-color: green;
+    color: white;
+    border: 2px solid green; 
+    padding: 5px 10px;
+    margin-left: 105px;
+}
+button:hover, button:active {
+    background-color: white;
+    color: green;
+}
+#username, p {
+	display: inline;
+} 
+</style>
+</head>
+
+<body>
+<h2>Sign up</h2>	
+	User name:<br>
+	<input id="username" type="text" name="username">
+	<p id="message" class="validation"></p>
+	<br>
+	User password:<br>
+	<input id="password" type="password" name="psw">
+	<br><br>
+	<button onclick="submit()">Submit</button>
+  
+  <script> 
+  function submit() {
+	  
+	  var tmp = validation();
+	  var username = $("#username").val();
+	  var password = $("#password").val();
+	  
+	  if (tmp == "") {		  
+		  $(function(){
+		    $.ajax({
+		        url: "http://localhost:7777/signup?" + "username=" + username + "&" + "password=" + password,
+		        type: "GET",
+		        dataType: "text",
+		        async: false, 
+		        cache: false, 		
+		        success: function(){
+		        	alert("Uspesno");
+		        },
+		        error: function(thrownError){
+		        	alert(thrownError); 
+		        }
+		    });
+		  });
+	  } else {
+		  validation();
+		  $('.validation').append(tmp)
+	  }
+  };
+  </script>
+  
+  <script> 
+  function validation() {	  
+	  var username = $("#username").val();
+	  var password = $("#password").val();
+ 	  var data1; 
+	  
+	  $(document).ready(function(){
+	    $.ajax({
+	        url: "http://localhost:7777/validate?" + "username=" + username + "&" + "password=" + password,
+	        type: "GET",
+	        dataType: "text",
+	        async: false,
+	        cache: false 
+	    }).then(function(data){
+  	    	data1 = data; 
+ 	    });	   
+	  });
+	  return data1;
+  };
+  </script>
+  
+</body>
+</html>

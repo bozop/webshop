@@ -1,0 +1,98 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> 
+<style>	
+a {
+    float: right; 
+    color: white;
+}
+h1 {
+	color: white;
+	background-color: green;
+}
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse; 
+    margin: 0 auto;
+}
+th, td {
+    padding: 5px;
+}
+th {
+    text-align: left;
+    background-color: green;
+    color: white;
+}
+span.search { 
+	margin-left: 35%;
+	margin-right: 35%; 
+}
+
+</style>	
+</head>
+
+<body>
+	<h1> Web Shop 
+ 		<span class="search" >    
+    		<input name="input" id="search"> 
+    		<button onclick="search()">Search</button>
+		</span>  
+ 		<a href="/userSignup.html">Sign Up</a>
+ 	</h1>
+ 	<br><br><br><br><br>   	
+ 	<table style="width:50%" id="table"></table>
+
+	<script> 
+	$(document).ready(function(){   
+	 	 $.ajax({
+		     url: "http://localhost:7777/products",
+		     type: "GET",
+		     data: { get_param: 'value' }, 
+		     dataType: "text",
+		     async: false,
+		     cache: false, 
+	/* 		 headers: { 'Access-Control-Allow-Origin': '*' }, 
+		     headers: { 'Access-Control-Allow-Headers': 'X-Requested-With' },
+	   	     crossDomain: true,    */
+		     success: function(data) {
+		         var json = $.parseJSON(data);
+		         $('#table').append('<tr><th>Name</th><th>Description</th><th>Price</th></tr>');
+		         for (var i=0; i<json.length; ++i)
+		         {
+		            $('#table').append('<tr><td>' + json[i].name + '</td><td>' + json[i].description + '</td><td>' + json[i].price +'</td></tr>');
+		         }
+		     }
+		 });
+	 });
+	 </script>
+  
+	 <script> 
+	 function search() {	  
+		  var term = $("#search").val();
+		  
+			  $(function(){
+			    $.ajax({
+			        url: "http://localhost:7777/search?term=" + term,
+			        type: "GET",
+			        dataType: "text",
+			        async: false, 
+			        cache: false,
+			        success: function(data) {
+				         var json = $.parseJSON(data);
+				         $('#table').empty();
+				         $('#table').append('<tr><th>Name</th><th>Description</th><th>Price</th></tr>');
+				         for (var i=0; i<json.length; ++i)
+				         {
+				            $('#table').append('<tr><td>' + json[i].name + '</td><td>' + json[i].description + '</td><td>' + json[i].price +'</td></tr>');
+				         }
+				     },
+			        error: function(thrownError){
+			        	alert(thrownError); 
+			        }
+			    });
+			  });
+	 };
+	 </script>
+  
+</body>
+</html>
